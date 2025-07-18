@@ -7,7 +7,7 @@ function Logo() {
       <img
         src="https://tailwindcss.com/plus-assets/img/logos/mark.svg?color=indigo&shade=600"
         alt="Your Company"
-        class="mx-auto h-10 w-auto"
+        className="mx-auto h-10 w-auto"
       />
     </>
   );

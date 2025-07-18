@@ -13,7 +13,7 @@ function Button({type,title,variant}) {
   return (
     <button
       type={`${type}`} 
-      class={`${baseStyles} ${variants[variant]}`}
+      className={`${baseStyles} ${variants[variant]}`}
     >
       {`${title}`}
     </button>
