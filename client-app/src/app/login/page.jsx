@@ -14,8 +14,13 @@ function page() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const router = useRouter();
-  const { login } = useAuth(); // Access global login method
+  const { login } = useAuth();
+
   const { user } = useAuth();
+  
+  if (user){
+    router.replace("/");
+  }
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
