@@ -1,10 +1,55 @@
+"use client"
+import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import Button from "../(components)/Button";
 import Link from "next/link";
 import Title from "../(components)/Title";
 import Logo from "../(components)/Logo";
+import api from "@/lib/axios";
+import { useRouter } from "next/navigation";
+import { useAuth } from "@/context/AuthContext";
 
 function page() {
+  const [formData, setFormData] = useState({ email: "", password: "" });
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+  const router = useRouter();
+  const { login } = useAuth(); // Access global login method
+  const { user } = useAuth();
+
+  const handleChange = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+    setError("");
+
+    try {
+      // Get CSRF cookie
+      await api.get("/sanctum/csrf-cookie");
+      
+      // Login request
+      const res = await api.post("/api/login", formData);
+
+      // Set global auth state
+      login(res.data.user);
+
+      router.push("/");
+      // Redirect or save user info in context/state
+    } catch (err) {
+      if (err.response) {
+        setError(err.response.data.message || "Login failed");
+      } else {
+        setError("Something went wrong");
+      }
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <div className="font-sans grid grid-rows-[20px_1fr_20px] items-center justify-items-center h-screen p-8 pb-20 gap-16 sm:p-20">
       <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
@@ -19,7 +64,7 @@ function page() {
           </div>
 
           <div className="mt-10 sm:mx-auto sm:w-full md:max-w-lg">
-            <form action="#" method="POST" className="space-y-6">
+            <form onSubmit={handleSubmit} className="space-y-6">
               <div>
                 <label
                   for="email"
@@ -34,6 +79,8 @@ function page() {
                     name="email"
                     required
                     autocomplete="email"
+                    value={formData.email}
+                    onChange={handleChange}
                     className="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6"
                   />
                 </div>
@@ -50,7 +97,7 @@ function page() {
                   <div className="text-sm">
                     <a
                       href="#"
-                      class="font-semibold text-indigo-600 hover:text-indigo-500"
+                      className="font-semibold text-indigo-600 hover:text-indigo-500"
                     >
                       Forgot password?
                     </a>
@@ -63,13 +110,20 @@ function page() {
                     name="password"
                     required
                     autocomplete="current-password"
+                    value={formData.password}
+                    onChange={handleChange}
                     className="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6"
                   />
                 </div>
               </div>
+              {error && (
+                <div className="bg-red-100 text-red-700 p-3 rounded mb-4">
+                  {error}
+                </div>
+              )}
 
               <div>
-                <Button type="submit" title="Sign in" variant="primary" />
+                <Button type="submit" title={loading ? "Signing in..." : "Sign in"} variant="primary" />
               </div>
             </form>
             <p className="mt-10 text-center text-sm/6 text-gray-500">

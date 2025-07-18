@@ -9,3 +9,8 @@ Route::get('/user', function (Request $request) {
 })->middleware('auth:sanctum');
 
 Route::middleware(['throttle:5,1'])->post('/register', [AuthController::class, 'register']);
+Route::middleware(['throttle:5,1'])->post('/login', [AuthController::class, 'login']);
+
+Route::get('/user-list', function (Request $request) {
+    return $request->user();
+});
