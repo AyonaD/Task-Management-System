@@ -44,4 +44,22 @@ class WorkspaceService
     {
         return $this->workspaceRepo->deleteWorkspace($id, Auth::id());
     }
+
+    public function getWorkspaceMembers(int $workspaceId)
+    {
+        $workspace = $this->workspaceRepo->getWorkspaceMembers($workspaceId, Auth::id());
+
+        if (!$workspace) {
+            abort(404, 'Workspace not found or access denied.');
+        }
+
+        return $workspace->members->map(function ($member) {
+            return [
+                'id' => $member->user->id,
+                'name' => $member->user->name,
+                'role_id' => $member->role_id,
+            ];
+        });
+    }
+
 }

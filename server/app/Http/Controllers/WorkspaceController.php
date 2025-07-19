@@ -48,4 +48,12 @@ class WorkspaceController extends Controller
         $this->workspaceService->deleteWorkspace($id);
         return response()->json(['message' => 'Workspace deleted']);
     }
+
+    public function members($id)
+    {
+        $members = $this->workspaceService->getWorkspaceMembers((int) $id);
+        return response()->json(['members' => $members]);
+    }
+
+
 }

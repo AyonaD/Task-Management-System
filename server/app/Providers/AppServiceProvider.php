@@ -22,6 +22,18 @@ class AppServiceProvider extends ServiceProvider
             \App\Repositories\WorkspaceRepositoryInterface::class,
             \App\Repositories\WorkspaceRepository::class
         );
+
+        $this->app->bind(
+            \App\Repositories\TaskRepositoryInterface::class,
+            \App\Repositories\TaskRepository::class
+        );
+
+        $this->app->bind(
+            \App\Repositories\CommentRepositoryInterface::class,
+            \App\Repositories\CommentRepository::class
+        );
+
+
     }
 
     /**

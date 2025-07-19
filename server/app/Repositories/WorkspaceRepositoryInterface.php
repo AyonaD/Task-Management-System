@@ -12,6 +12,7 @@ interface WorkspaceRepositoryInterface
     public function deleteWorkspace(int $workspaceId, int $userId): bool;
     public function addMember(array $data);
     public function getUserRelatedWorkspaces(int $userId);
+    public function getWorkspaceMembers(int $workspaceId, int $userId);
 
 
 }

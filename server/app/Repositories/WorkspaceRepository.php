@@ -50,4 +50,19 @@ class WorkspaceRepository implements WorkspaceRepositoryInterface
             ->get();
     }
 
+    public function getWorkspaceMembers(int $workspaceId, int $userId)
+    {
+        return Workspace::with('members.user')
+            ->where(function ($q) use ($workspaceId, $userId) {
+                $q->where('id', $workspaceId)
+                ->where('created_user_id', $userId)
+                ->orWhereHas('members', function ($q) use ($workspaceId, $userId) {
+                    $q->where('workspace_id', $workspaceId)
+                        ->where('user_id', $userId);
+                });
+            })
+            ->first();
+    }
+
+
 }
