@@ -53,7 +53,7 @@ function page() {
         <div className="flex min-h-full flex-col justify-center px-2 py-12 lg:px-8">
 
           <div className="sm:mx-auto sm:w-full md:max-w-xl">
-            <Logo/>
+            <Logo alignment="justify-center" />
 
             <Title alignment="text-center" variant="primary" title="Sign Up Free and Streamline Your Task Management "></Title>
 

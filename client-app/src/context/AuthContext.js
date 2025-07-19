@@ -2,6 +2,7 @@
 import { createContext, useContext, useState, useEffect  } from "react";
 import api from "@/lib/axios";
 import { useRouter } from "next/navigation";
+import Loader from "@/app/(components)/Loader";
 
 const AuthContext = createContext();
 
@@ -38,7 +39,13 @@ export function AuthProvider({ children }) {
     router.replace("/login");
   };
 
-  
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center h-screen">
+        <Loader/>
+      </div>
+    );
+  }
 
   return (
     <AuthContext.Provider value={{ user, loading, login, logout }}>

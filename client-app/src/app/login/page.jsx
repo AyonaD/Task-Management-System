@@ -18,7 +18,7 @@ function page() {
 
   const { user } = useAuth();
   
-  if (user){
+  if(user){
     router.replace("/");
   }
 
@@ -61,8 +61,8 @@ function page() {
         <div className="flex min-h-full flex-col justify-center px-2 py-12 lg:px-8">
 
           <div className="sm:mx-auto sm:w-full md:max-w-xl">
-            <Logo/>
 
+            <Logo alignment="justify-center" />
             <Title alignment="text-center" variant="primary" title="Manage your tasks efficiently with your personalized workspace"></Title>
 
             
@@ -72,7 +72,7 @@ function page() {
             <form onSubmit={handleSubmit} className="space-y-6">
               <div>
                 <label
-                  for="email"
+                  htmlFor="email"
                   className="block text-sm/6 font-medium text-gray-900"
                 >
                   Email address
@@ -83,7 +83,7 @@ function page() {
                     type="email"
                     name="email"
                     required
-                    autocomplete="email"
+                    autoComplete="email"
                     value={formData.email}
                     onChange={handleChange}
                     className="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6"
@@ -94,7 +94,7 @@ function page() {
               <div>
                 <div className="flex items-center justify-between">
                   <label
-                    for="password"
+                    htmlFor="password"
                     className="block text-sm/6 font-medium text-gray-900"
                   >
                     Password
@@ -114,7 +114,7 @@ function page() {
                     type="password"
                     name="password"
                     required
-                    autocomplete="current-password"
+                    autoComplete="current-password"
                     value={formData.password}
                     onChange={handleChange}
                     className="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6"
