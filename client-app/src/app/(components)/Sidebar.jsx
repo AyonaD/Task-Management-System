@@ -1,17 +1,36 @@
 'use client'
-import React,{useState} from "react";
+import React,{useState, useEffect} from "react";
 import Link from "next/link";
 import { FiHome, FiList,FiPlus  } from "react-icons/fi";
 import { MdWorkspaces } from "react-icons/md"; 
 import WorkspaceModal from "./WorkspaceModal";
+import api from "@/lib/axios";
 
 function Sidebar() {
   const [isModalOpen, setModalOpen] = useState(false);
+  const [workspaces, setWorkspaces] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   const handleCreateWorkspace = (title) => {
     console.log("Workspace Created:", title);
-    // TODO: API call to create workspace
+    // fetchWorkspaces();
   };
+
+  const fetchWorkspaces = async () => {
+    try {
+      const res = await api.get("/api/workspaces");
+      setWorkspaces(res.data.workspaces || []);
+    } catch (err) {
+      console.error("Failed to fetch workspaces", err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchWorkspaces();
+  }, []);
+
 
   return (
     <aside>
@@ -49,17 +68,24 @@ function Sidebar() {
                 />
             </div>
 
-            <ul className="">
-              <li>
-                <Link
-                  href={"/"}
-                  className="flex size-full gap-4 px-4 py-2 group  rounded-md bg-cover hover:bg-purple-100 hover:shadow-inner focus:bg-gradient-to-r from-purple-400 to-purple-600 focus:text-white text-gray-700 transition-all ease-linear"
-                >
-                  <MdWorkspaces className="size-5 group-focus:stroke-white" />
-                  Task Management System
-                </Link>
-              </li>
+            <ul>
+              {workspaces.length > 0 ? (
+                workspaces.map((ws) => (
+                  <li key={ws.id}>
+                    <Link
+                      href={`/workspace/${ws.id}`}
+                      className="flex size-full gap-4 px-4 py-2 group rounded-md bg-cover hover:bg-purple-100 hover:shadow-inner focus:bg-gradient-to-r from-purple-400 to-purple-600 focus:text-white text-gray-700 transition-all ease-linear"
+                    >
+                      <MdWorkspaces className="size-5 group-focus:stroke-white" />
+                      {ws.title}
+                    </Link>
+                  </li>
+                ))
+              ) : (
+                <li className="px-4 text-gray-500 text-sm">No workspaces found</li>
+              )}
             </ul>
+
           </li>
         </ul>
       </div>

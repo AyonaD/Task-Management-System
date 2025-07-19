@@ -4,7 +4,6 @@ import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import api from "@/lib/axios";
 import { useAuth } from "@/context/AuthContext";
-import Loader from '@/app/(components)/Loader';
 import Header from '@/app/(components)/Header';
 import Footer from '@/app/(components)/Footer';
 import Sidebar from '@/app/(components)/Sidebar';
@@ -46,8 +45,7 @@ function page() {
           <main className="flex-1 shadow-md rounded-md ml-6">
 
             <div className="px-12 py-6">
-              <span className="text-sm">{workspace?.title || "Workspace"}</span>
-              <p className="font-md font-semibold">Welcome, {user?.name || "Guest"}! This is your workspace.</p>
+              <p className=" text-2xl font-semibold">{workspace?.title || "Workspace"}</p>
             </div>
             
 

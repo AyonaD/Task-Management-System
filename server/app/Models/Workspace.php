@@ -16,8 +16,14 @@ class Workspace extends Model
         'created_user_id',
     ];
 
-    public function user()
+    public function members()
     {
-        return $this->belongsTo(User::class);
+        return $this->hasMany(WorkspaceMember::class);
     }
+
+    public function creator()
+    {
+        return $this->belongsTo(User::class, 'created_user_id');
+    }
+
 }

@@ -3,6 +3,7 @@
 namespace App\Repositories;
 
 use App\Models\Workspace;
+use App\Models\WorkspaceMember;
 
 class WorkspaceRepository implements WorkspaceRepositoryInterface
 {
@@ -19,8 +20,13 @@ class WorkspaceRepository implements WorkspaceRepositoryInterface
     public function findWorkspaceByUser(int $workspaceId, int $userId): Workspace
     {
         return Workspace::where('id', $workspaceId)
-            ->where('created_user_id', $userId)
-            ->firstOrFail();
+        ->where(function ($query) use ($userId) {
+            $query->where('created_user_id', $userId)
+                  ->orWhereHas('members', function ($q) use ($userId) {
+                      $q->where('user_id', $userId);
+                  });
+        })
+        ->firstOrFail();
     }
 
     public function deleteWorkspace(int $workspaceId, int $userId): bool
@@ -28,4 +34,20 @@ class WorkspaceRepository implements WorkspaceRepositoryInterface
         $workspace = $this->findWorkspaceByUser($workspaceId, $userId);
         return $workspace->delete();
     }
+
+    public function addMember(array $data)
+    {
+        return WorkspaceMember::create($data);
+    }
+
+    public function getUserRelatedWorkspaces(int $userId)
+    {
+        return Workspace::where('created_user_id', $userId)
+            ->orWhereHas('members', function ($query) use ($userId) {
+                $query->where('user_id', $userId);
+            })
+            ->with('members.user') // eager load members with user
+            ->get();
+    }
+
 }

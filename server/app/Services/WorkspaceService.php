@@ -16,13 +16,23 @@ class WorkspaceService
 
     public function listUserWorkspaces()
     {
-        return $this->workspaceRepo->getUserWorkspaces(Auth::id());
+        return $this->workspaceRepo->getUserRelatedWorkspaces(Auth::id());
     }
 
     public function createWorkspace(array $data)
     {
         $data['created_user_id'] = Auth::id();
-        return $this->workspaceRepo->createWorkspace($data);
+        $workspace = $this->workspaceRepo->createWorkspace($data);
+
+        $this->workspaceRepo->addMember([
+            'workspace_id' => $workspace->id,
+            'user_id'      => Auth::id(),
+            'role_id'      => 1,
+        ]);
+
+        return $workspace;
+
+        // return $this->workspaceRepo->createWorkspace($data);
     }
 
     public function findWorkspace(int $id)
