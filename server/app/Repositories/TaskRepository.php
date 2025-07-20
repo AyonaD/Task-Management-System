@@ -31,7 +31,8 @@ class TaskRepository implements TaskRepositoryInterface
         return Task::with([
             'assignedUser:id,name,email',
             'activityLogs.user:id,name',
-            'comments.user:id,name'
+            'comments.user:id,name',
+            'workpace.members.user:id,name,email'
         ])->find($id);
     }
 

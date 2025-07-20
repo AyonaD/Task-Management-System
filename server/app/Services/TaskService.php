@@ -58,7 +58,7 @@ class TaskService
            [ 
             'task_id' => $task->id,
             'user_id' => Auth::id(),
-            'log' => "Task '.$task->title.' created."
+            'log' => 'Task '.$task->title.' created.'
             ]
         );
         return $task;

@@ -7,6 +7,8 @@ import Sidebar from '@/app/(components)/Sidebar';
 import api from '@/lib/axios';
 import CommentForm from '@/app/(components)/CommentForm';
 import CommentList from '@/app/(components)/CommentList';
+import ActivityList from '@/app/(components)/ActivityList';
+import TaskEdit from '@/app/(components)/TaskEdit';
 
 const priorityLabels = {
   1: "Low",
@@ -16,15 +18,35 @@ const priorityLabels = {
 
 
 function page() {
-
     const { id } = useParams();
     const [task, setTask] = useState(null);
     const [activeTab, setActiveTab] = useState("comment");
+    const [status, setStatus] = useState(0);
+
     
 
     useEffect(() => {
-        api.get(`/api/tasks/${id}`).then(res => setTask(res.data.task));
+        api.get(`/api/tasks/${id}`).then(res => {
+            setTask(res.data.task)
+            setStatus(res.data.task.status);
+        });
     }, [id]);
+
+    const handleStatusChange = async (e) => {
+        const newStatus = Number(e.target.value);
+        setStatus(newStatus); // update UI immediately
+
+        try {
+            await api.put(`/api/tasks/${task.id}`, { status: newStatus });
+
+            const updated = await api.get(`/api/tasks/${task.id}`);
+            setTask(updated.data.task);
+        } catch (err) {
+            console.error('Failed to update status', err);
+            setStatus(task.status);
+        }
+     };
+
 
   if (!task) return null;
     
@@ -77,7 +99,7 @@ function page() {
 
                     )}
                     {activeTab === "activity" && (
-                    <h1>page ac</h1>
+                        <ActivityList activiyLog={task.activity_logs} />
                     )}
                 </div>
 
@@ -102,6 +124,7 @@ function page() {
                       : ""
                   }`}
                   value={task.status}
+                  onChange={handleStatusChange}
                 >
                   <option value="1" className="bg-blue-300">
                     Pending
@@ -118,71 +141,10 @@ function page() {
                 </select>
               </div>
 
-              <div className='mt-4 bg-[#ebeef7] rounded-md'>
+              <div className='mt-4 shadow p-6 rounded-md'>
                 <div className="relative overflow-x-auto">
-                  <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
-                    
-                    <tbody>
-                      <tr className=" dark:bg-gray-800">
-                        <th
-                          scope="row"
-                          className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
-                        >
-                          Assignee
-                        </th>
-                        <td className="px-6 py-4"> {task.assigned_user.name} </td>
-                      </tr>
-
-                      <tr className=" dark:bg-gray-800">
-                        <th
-                          scope="row"
-                          className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
-                        >
-                          Due date
-                        </th>
-                        <td className="px-6 py-4">{task.due_date}</td>
-                      </tr>
-
-                      <tr className=" dark:bg-gray-800">
-                        <th
-                          scope="row"
-                          className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
-                        >
-                          Priority
-                        </th>
-                        <td className="px-6 py-4"><span
-                        className={`px-4 py-2 text-white text-xs rounded ${
-                          task.priority === 1 ? "bg-blue-500" : ""
-                        } ${
-                          task.priority === 2 ? "bg-yellow-500 text-black" : ""
-                        } ${task.priority === 3 ? "bg-purple-500" : ""}`}
-                      >
-                        {priorityLabels[task.priority]}
-                      </span></td>
-                      </tr>
-
-                      <tr className=" dark:bg-gray-800">
-                        <th
-                          scope="row"
-                          className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
-                        >
-                          Start Date
-                        </th>
-                        <td className="px-6 py-4">{task.start_date}</td>
-                      </tr>
-
-                      <tr className=" dark:bg-gray-800">
-                        <th
-                          scope="row"
-                          className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
-                        >
-                         Time remaining
-                        </th>
-                        <td className="px-6 py-4">1</td>
-                      </tr>
-                    </tbody>
-                    
-                  </table>
+                    <TaskEdit task={task} members={task.workpace.members} onTaskUpdated={(updatedTask) => setTask(updatedTask)} />
+                  
                 </div>
               </div>
             </div>

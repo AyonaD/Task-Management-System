@@ -28,6 +28,8 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::get('/tasks/{id}', [TaskController::class, 'show']);
 
     Route::post('/tasks/{id}/comment', [CommentController::class, 'store']);
+    Route::put('/tasks/{task}', [TaskController::class, 'update']);
+
 
 
 });

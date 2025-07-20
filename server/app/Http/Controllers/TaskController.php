@@ -6,6 +6,9 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Services\TaskService;
 use Illuminate\Validation\ValidationException;
+use App\Models\Task;
+use App\Models\ActivityLog;
+use Illuminate\Support\Facades\Auth;
 
 class TaskController extends Controller
 {
@@ -45,4 +48,18 @@ class TaskController extends Controller
         $task = $this->taskService->findTask($id);
         return response()->json(['task' => $task]);
     }
+
+    public function update(Request $request, Task $task)
+    {
+        $task->update($request->all());
+        ActivityLog::create(
+           [ 
+            'task_id' => $task->id,
+            'user_id' => Auth::id(),
+            'log' => 'Task updated.'
+            ]
+        );
+        return response()->json(['message' => 'Task updated successfully', 'task' => $task]);
+    }
+
 }
