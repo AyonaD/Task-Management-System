@@ -203,7 +203,7 @@ function page({ workspaceId }) {
                     filters={{ status: statusFilter, user: assignedUserFilter }}
                   />
                 )}
-                {activeTab === "people" && <PeopleList workspaceId={id} />}
+                {activeTab === "people" && (<PeopleList workspaceId={id} members={members} />)}
               </div>
 
               <RightSideModal

@@ -48,7 +48,7 @@ function Sidebar() {
 
           <li className="flex-center cursor-pointer text-sm  w-full whitespace-nowrap">
             <Link
-              href={"/"}
+              href={"/tasks"}
               className="flex size-full gap-4 px-4 py-2 group  rounded-md bg-cover hover:bg-purple-100 hover:shadow-inner focus:bg-gradient-to-r from-purple-400 to-purple-600 focus:text-white text-gray-700 transition-all ease-linear"
             >
               <FiList className="size-5 group-focus:stroke-white" />
