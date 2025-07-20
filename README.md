@@ -7,6 +7,8 @@ This repository contains a **Laravel API (server)** and a **Next.js client app**
 ## **Setup Instructions**
 
 ### **1. Clone the Repository**
+```bash
+
 git clone <repository-url>
 cd <repository-name>
 
@@ -70,3 +72,7 @@ php artisan db:seed
 
 Next.js Commands:
 npm run dev
+
+
+---
+
