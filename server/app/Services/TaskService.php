@@ -74,4 +74,9 @@ class TaskService
         return $this->taskRepo->findById($id, Auth::id());
     }
 
+    public function getUserTasks(int $workspaceId)
+    {
+        return $this->taskRepo->getTasksByUserspace($workspaceId);
+    }
+
 }

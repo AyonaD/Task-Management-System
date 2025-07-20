@@ -50,4 +50,17 @@ class AuthController extends Controller
         }
     }
 
+    public function logout(Request $request)
+    {
+        // For Sanctum: delete current access token
+        auth()->guard('web')->logout();
+
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
+
+        return response()->json(['message' => 'Logged out']);
+
+    }
+
+
 }

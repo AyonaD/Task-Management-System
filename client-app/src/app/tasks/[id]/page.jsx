@@ -9,6 +9,7 @@ import CommentForm from '@/app/(components)/CommentForm';
 import CommentList from '@/app/(components)/CommentList';
 import ActivityList from '@/app/(components)/ActivityList';
 import TaskEdit from '@/app/(components)/TaskEdit';
+import { useAuth } from "@/context/AuthContext";
 
 const priorityLabels = {
   1: "Low",
@@ -16,19 +17,23 @@ const priorityLabels = {
   3: "High",
 };
 
+const userRole = {
+  1: "Admin",
+  2: "Member"
+};
 
 function page() {
     const { id } = useParams();
     const [task, setTask] = useState(null);
     const [activeTab, setActiveTab] = useState("comment");
     const [status, setStatus] = useState(0);
-
-    
+    const { user } = useAuth();
 
     useEffect(() => {
         api.get(`/api/tasks/${id}`).then(res => {
             setTask(res.data.task)
             setStatus(res.data.task.status);
+            console.log(res.data.task);
         });
     }, [id]);
 
@@ -49,7 +54,11 @@ function page() {
 
 
   if (!task) return null;
-    
+  
+  const isAdmin = task.workpace?.members?.some(
+    (member) => member.user_id === user?.id && member.role_id === 1
+  );
+
   return (
     <div className="flex flex-col min-h-screen">
       <Header />
@@ -110,7 +119,7 @@ function page() {
             </div>
 
             <div className="pl-36">
-              <div>
+              <div className='flex justify-between'>
                 <select
                   className={`border rounded px-6 py-2 text-sm ${
                     task.status === 1
@@ -139,6 +148,17 @@ function page() {
                     Done
                   </option>
                 </select>
+
+               {isAdmin && (
+                  <div className="">
+                    <button
+                      className="py-2 px-4 ms-2 text-sm font-medium text-red-400 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700"
+                      onClick={() => console.log("Delete logic here")}
+                    >
+                      Remove Task
+                    </button>
+                  </div>
+                )}
               </div>
 
               <div className='mt-4 shadow p-6 rounded-md'>

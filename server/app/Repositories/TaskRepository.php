@@ -47,4 +47,20 @@ class TaskRepository implements TaskRepositoryInterface
         $task = Task::findOrFail($id);
         return $task->delete();
     }
+
+    public function getTasksByUserspace(int $id)
+    {
+        $tasks = Task::with([
+            'assignedUser:id,name,email',
+            'activityLogs.user:id,name'
+        ])
+        ->where('assigned_user_id', $id)
+        ->orderBy('status', 'asc')
+        ->get()
+        ->groupBy('status');
+
+        return $tasks;
+
+    }
+
 }

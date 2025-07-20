@@ -62,4 +62,9 @@ class TaskController extends Controller
         return response()->json(['message' => 'Task updated successfully', 'task' => $task]);
     }
 
+    public function getTasksByUser($id){
+        $tasks = $this->taskService->getUserTasks((int) $id);
+        return response()->json(['tasks' => $tasks]);
+    }
+
 }

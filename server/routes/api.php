@@ -10,6 +10,7 @@ use App\Http\Controllers\CommentController;
 
 Route::middleware(['throttle:5,1'])->post('/register', [AuthController::class, 'register']);
 Route::middleware(['throttle:5,1'])->post('/login', [AuthController::class, 'login']);
+ Route::post('/logout', [AuthController::class, 'logout']);
 
 Route::middleware(['auth:sanctum'])->group(function () {
     Route::get('/user', function (Request $request) {
@@ -30,6 +31,8 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::post('/tasks/{id}/comment', [CommentController::class, 'store']);
     Route::put('/tasks/{task}', [TaskController::class, 'update']);
 
+    // routes/api.php
+    Route::get('/tasks/user/{user}', [TaskController::class, 'getTasksByUser']);
 
 
 });
